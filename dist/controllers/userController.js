@@ -36,7 +36,7 @@ export const signupUser = async (req, res, next) => {
         const expires = new Date();
         expires.setDate(expires.getDate() + 7);
         res.cookie(COOKIE_NAME, token, { path: "/", domain: "localhost", expires, httpOnly: true, signed: true });
-        res.status(201).json({ message: "OK", id: user._id.toString() });
+        res.status(201).json({ message: "OK", name: user.name, password: user.email });
     }
     catch (err) {
         console.error(err.message);
@@ -63,7 +63,22 @@ export const loginUser = async (req, res, next) => {
         const expires = new Date();
         expires.setDate(expires.getDate() + 7);
         res.cookie(COOKIE_NAME, token, { path: "/", domain: "localhost", expires, httpOnly: true, signed: true });
-        res.status(200).json({ message: "OK", id: user._id.toString() });
+        res.status(200).json({ message: "OK", name: user.name, password: user.email });
+    }
+    catch (err) {
+        console.error(err.message);
+        res.status(500).json({ message: "Server Error" });
+    }
+};
+export const verifyUser = async (req, res, next) => {
+    try {
+        const user = await userModel.findById(res.locals.jwtData.id);
+        if (!user)
+            return res.status(400).json({ message: "Token malfunctioned" });
+        if (user._id.toString() !== res.locals.jwtData.id) {
+            res.status(401).json({ message: " Permisson did not match" });
+        }
+        res.status(200).json({ message: "OK", name: user.name, password: user.email });
     }
     catch (err) {
         console.error(err.message);
