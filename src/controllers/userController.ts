@@ -89,7 +89,7 @@ export const verifyUser = async (
   req: Request,
   res: Response,
   next: NextFunction
-) => {
+) => {  
   try {
     const user = await userModel.findById(res.locals.jwtData.id );
    
