@@ -26,15 +26,19 @@ export const signupUser = async (
   next: NextFunction
 ) => {
   const { name, email, password } = req.body;
+  
   try {
     // Hash the password
     const hashedPassword = await hash(password, 10);
     // Check if user already exists
     let user = await userModel.findOne({ email });
+    console.log(name , email);
+
     if (user) return res.status(400).json({ message: "User already exists" });
 
     user = new userModel({ name, email, password: hashedPassword });
     await user.save();
+
    // create token and store cookie 
     res.clearCookie(COOKIE_NAME, {
       httpOnly: true,
@@ -98,6 +102,34 @@ export const verifyUser = async (
     if(user._id.toString() !== res.locals.jwtData.id){
       res.status(401).json({ message: " Permisson did not match" });
     }
+
+    res.status(200).json({ message: "OK", name:user.name , password:user.email });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+export const userLogout = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {  
+  try {
+    const user = await userModel.findById(res.locals.jwtData.id );
+   
+    if (!user) return res.status(400).json({ message: "Token malfunctioned" });
+
+    if(user._id.toString() !== res.locals.jwtData.id){
+      res.status(401).json({ message: " Permisson did not match" });
+    }
+
+    res.clearCookie(COOKIE_NAME, {
+      httpOnly: true,
+      domain:"localhost" ,
+      signed: true,
+      path: "/"
+    });
 
     res.status(200).json({ message: "OK", name:user.name , password:user.email });
   } catch (err) {

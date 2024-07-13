@@ -45,3 +45,47 @@ export const generateChatCompletion = async (
     return res.status(500).json({ message: "Server Error" });
   }
 };
+
+export const sendChatsToUser = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {  
+  try {
+    const user = await userModel.findById(res.locals.jwtData.id );
+   
+    if (!user) return res.status(400).json({ message: "Token malfunctioned" });
+
+    if(user._id.toString() !== res.locals.jwtData.id){
+      res.status(401).json({ message: " Permisson did not match" });
+    }
+
+    res.status(200).json({ message: "OK", chats:user.chats });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
+export const deleteChats = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {  
+  try {
+    const user = await userModel.findById(res.locals.jwtData.id );
+   
+    if (!user) return res.status(400).json({ message: "Token malfunctioned" });
+
+    if(user._id.toString() !== res.locals.jwtData.id){
+      res.status(401).json({ message: " Permisson did not match" });
+    }
+    //@ts-ignore
+    user.chats= [];
+    await user.save();
+    res.status(200).json({ message: "OK"});
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
