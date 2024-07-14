@@ -29,6 +29,7 @@ app.use(cors(
     {
         origin: ['http://localhost:5173' ,'https://ai-chat-bot-frontend-phi.vercel.app' ],
         credentials: true, // Allow credentials (cookies, authorization headers, etc.)
+        
       }
 ))
 
