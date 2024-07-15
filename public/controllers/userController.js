@@ -32,7 +32,7 @@ export const signupUser = async (req, res, next) => {
             domain: "ai-chat-bot-frontend-phi.vercel.app",
             signed: true,
             path: "/",
-            // sameSite: "None", // Allow cross-site cookie
+            sameSite: "none", // Allow cross-site cookie
             secure: process.env.NODE_ENV === "production" // Use secure cookies in production
         });
         const token = createToken(user._id.toString(), user.email, "7d");
@@ -44,7 +44,7 @@ export const signupUser = async (req, res, next) => {
             expires,
             httpOnly: true,
             signed: true,
-            // sameSite: "None",
+            sameSite: "none",
             secure: process.env.NODE_ENV === "production"
         });
         res.status(201).json({ message: "OK", name: user.name, email: user.email, token });
@@ -69,7 +69,7 @@ export const loginUser = async (req, res, next) => {
             domain: "ai-chat-bot-frontend-phi.vercel.app",
             signed: true,
             path: "/",
-            // sameSite: "None",
+            sameSite: "none",
             secure: process.env.NODE_ENV === "production"
         });
         const token = createToken(user._id.toString(), user.email, "7d");
@@ -81,7 +81,7 @@ export const loginUser = async (req, res, next) => {
             expires,
             httpOnly: true,
             signed: true,
-            // sameSite: "None",
+            sameSite: "none",
             secure: process.env.NODE_ENV === "production"
         });
         res.status(200).json({ message: "OK", name: user.name, email: user.email, token });
@@ -119,7 +119,7 @@ export const userLogout = async (req, res, next) => {
             domain: "ai-chat-bot-frontend-phi.vercel.app",
             signed: true,
             path: "/",
-            // sameSite: ,
+            sameSite: "none",
             secure: process.env.NODE_ENV === "production"
         });
         res.status(200).json({ message: "OK", name: user.name, email: user.email });
