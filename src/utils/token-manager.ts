@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { COOKIE_NAME } from "./constants.js";
 
+
+
 export const createToken = (id:string , email:string , expiresIn) =>{
     const payload = {id, email}
     
@@ -11,9 +13,11 @@ export const createToken = (id:string , email:string , expiresIn) =>{
 
 export const verifyToken = (req:Request , res:Response , next:NextFunction) => {
     const token = req.signedCookies['auth_token'];
+    console.log(req.signedCookies);
+    
     
     if(!token){
-        console.log(token , 'HIIII😫😪😯');        
+        console.log(token , 'HIIII😫😪😯');
         return res.status(401).json({message:"Token not provided"})
     }
     return new Promise<void>((resolve, reject)=>{
