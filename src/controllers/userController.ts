@@ -39,28 +39,19 @@ export const signupUser = async (
     user = new userModel({ name, email, password: hashedPassword });
     await user.save();
 
-    // Create token and store cookie 
+   // create token and store cookie 
     res.clearCookie(COOKIE_NAME, {
       httpOnly: true,
-      domain: "ai-chat-bot-frontend-phi.vercel.app",
+      domain:"ai-chat-bot-frontend-phi.vercel.app" ,
       signed: true,
-      path: "/",
-      sameSite: "none", // Allow cross-site cookie
+      path: "/"
     });
-    const token = createToken(user._id.toString(), user.email, "7d");
+    const token = createToken(user._id.toString(),user.email, "7d");
     const expires = new Date();
-    expires.setDate(expires.getDate() + 7);
-    res.cookie(COOKIE_NAME, token, {
-      path: "/",
-      domain: "ai-chat-bot-frontend-phi.vercel.app",
-      expires,
-      httpOnly: true,
-      signed: true,
-      sameSite: "none",
-      
-    });
+    expires.setDate(expires.getDate()+7);
+    res.cookie(COOKIE_NAME, token , {path: "/" , domain:"ai-chat-bot-frontend-phi.vercel.app" , expires , httpOnly:true, signed: true});
     
-    res.status(201).json({ message: "OK", name: user.name, email: user.email, token });
+    res.status(201).json({ message: "OK", name:user.name , email:user.email , token });
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ message: "Server Error" });
@@ -79,29 +70,19 @@ export const loginUser = async (
     if (!user) return res.status(400).json({ message: "User not found" });
 
     const isMatch = await compare(password, user.password);
-    if (!isMatch) return res.status(403).json({ message: "Incorrect Password.." });
-
+    if (!isMatch)
+      return res.status(403).json({ message: "Incorrect Password.. " });
     res.clearCookie(COOKIE_NAME, {
       httpOnly: true,
-      domain: "ai-chat-bot-frontend-phi.vercel.app",
+      domain:"ai-chat-bot-frontend-phi.vercel.app" ,
       signed: true,
-      path: "/",
-      sameSite: "none",
-      
+      path: "/"
     });
-    const token = createToken(user._id.toString(), user.email, "7d");
+    const token = createToken(user._id.toString(),user.email, "7d");
     const expires = new Date();
-    expires.setDate(expires.getDate() + 7);
-    res.cookie(COOKIE_NAME, token, {
-      path: "/",
-      domain: "ai-chat-bot-frontend-phi.vercel.app",
-      expires,
-      httpOnly: true,
-      signed: true,
-      sameSite: "none",
-      
-    });
-    res.status(200).json({ message: "OK", name: user.name, email: user.email, token });
+    expires.setDate(expires.getDate()+7);
+    res.cookie(COOKIE_NAME, token , {path: "/" , domain:"ai-chat-bot-frontend-phi.vercel.app" , expires , httpOnly:true, signed: true});
+    res.status(200).json({ message: "OK", name:user.name , email:user.email , token });
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ message: "Server Error" });
@@ -114,15 +95,15 @@ export const verifyUser = async (
   next: NextFunction
 ) => {  
   try {
-    const user = await userModel.findById(res.locals.jwtData.id);
+    const user = await userModel.findById(res.locals.jwtData.id );
    
     if (!user) return res.status(400).json({ message: "Token malfunctioned" });
 
-    if (user._id.toString() !== res.locals.jwtData.id) {
-      res.status(401).json({ message: "Permission did not match" });
+    if(user._id.toString() !== res.locals.jwtData.id){
+      res.status(401).json({ message: " Permisson did not match" });
     }
 
-    res.status(200).json({ message: "OK", name: user.name, email: user.email });
+    res.status(200).json({ message: "OK", name:user.name , password:user.email });
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ message: "Server Error" });
@@ -135,24 +116,22 @@ export const userLogout = async (
   next: NextFunction
 ) => {  
   try {
-    const user = await userModel.findById(res.locals.jwtData.id);
+    const user = await userModel.findById(res.locals.jwtData.id );
    
     if (!user) return res.status(400).json({ message: "Token malfunctioned" });
 
-    if (user._id.toString() !== res.locals.jwtData.id) {
-      res.status(401).json({ message: "Permission did not match" });
+    if(user._id.toString() !== res.locals.jwtData.id){
+      res.status(401).json({ message: " Permisson did not match" });
     }
 
     res.clearCookie(COOKIE_NAME, {
       httpOnly: true,
-      domain: "ai-chat-bot-frontend-phi.vercel.app",
+      domain:"ai-chat-bot-frontend-phi.vercel.app" ,
       signed: true,
-      path: "/",
-      sameSite: "none",
-      
+      path: "/"
     });
 
-    res.status(200).json({ message: "OK", name: user.name, email: user.email });
+    res.status(200).json({ message: "OK", name:user.name , password:user.email });
   } catch (err) {
     console.error(err.message);
     res.status(500).json({ message: "Server Error" });
