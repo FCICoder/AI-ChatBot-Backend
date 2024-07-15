@@ -44,6 +44,7 @@ export const signupUser = async (
       httpOnly: true,
       // domain: "ai-chat-bot-frontend-phi.vercel.app",
       signed: true,
+      sameSite:"none",
       path: "/",
     });
     const token = createToken(user._id.toString(), user.email, "7d");
@@ -55,6 +56,7 @@ export const signupUser = async (
       expires,
       httpOnly: true,
       signed: true,
+      sameSite:"none",
 
     });
 
@@ -85,6 +87,7 @@ export const loginUser = async (
       httpOnly: true,
       // domain: "ai-chat-bot-frontend-phi.vercel.app",
       signed: true,
+      sameSite:"none",
       path: "/",
     });
     const token = createToken(user._id.toString(), user.email, "7d");
@@ -96,6 +99,7 @@ export const loginUser = async (
       expires,
       httpOnly: true,
       signed: true,
+      sameSite:"none",
     });
     res
       .status(200)
@@ -147,6 +151,7 @@ export const userLogout = async (
       httpOnly: true,
       // domain: "ai-chat-bot-frontend-phi.vercel.app",
       signed: true,
+      sameSite:"none",
       path: "/",
     });
 

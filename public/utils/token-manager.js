@@ -7,6 +7,7 @@ export const createToken = (id, email, expiresIn) => {
 export const verifyToken = (req, res, next) => {
     const token = req.signedCookies['auth_token'];
     if (!token) {
+        console.log(token, 'HIIII😫😪😯');
         return res.status(401).json({ message: "Token not provided" });
     }
     return new Promise((resolve, reject) => {
