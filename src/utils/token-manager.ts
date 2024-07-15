@@ -10,10 +10,10 @@ export const createToken = (id:string , email:string , expiresIn) =>{
 }
 
 export const verifyToken = (req:Request , res:Response , next:NextFunction) => {
-    const token = req.signedCookies[`${COOKIE_NAME}`];
-    console.log(token);
+    const token = req.signedCookies['auth_token'];
     
     if(!token){
+        console.log(token , 'HIIII😫😪😯');        
         return res.status(401).json({message:"Token not provided"})
     }
     return new Promise<void>((resolve, reject)=>{
