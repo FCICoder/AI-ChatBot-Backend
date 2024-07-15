@@ -42,14 +42,14 @@ export const signupUser = async (
    // create token and store cookie 
     res.clearCookie(COOKIE_NAME, {
       httpOnly: true,
-      domain:"localhost" ,
+      domain:"https://ai-chat-bot-frontend-phi.vercel.app" ,
       signed: true,
       path: "/"
     });
     const token = createToken(user._id.toString(),user.email, "7d");
     const expires = new Date();
     expires.setDate(expires.getDate()+7);
-    res.cookie(COOKIE_NAME, token , {path: "/" , domain:"localhost" , expires , httpOnly:true, signed: true});
+    res.cookie(COOKIE_NAME, token , {path: "/" , domain:"https://ai-chat-bot-frontend-phi.vercel.app" , expires , httpOnly:true, signed: true});
     
     res.status(201).json({ message: "OK", name:user.name , email:user.email , token });
   } catch (err) {
@@ -74,14 +74,14 @@ export const loginUser = async (
       return res.status(403).json({ message: "Incorrect Password.. " });
     res.clearCookie(COOKIE_NAME, {
       httpOnly: true,
-      domain:"localhost" ,
+      domain:"https://ai-chat-bot-frontend-phi.vercel.app/" ,
       signed: true,
       path: "/"
     });
     const token = createToken(user._id.toString(),user.email, "7d");
     const expires = new Date();
     expires.setDate(expires.getDate()+7);
-    res.cookie(COOKIE_NAME, token , {path: "/" , domain:"localhost" , expires , httpOnly:true, signed: true});
+    res.cookie(COOKIE_NAME, token , {path: "/" , domain:"https://ai-chat-bot-frontend-phi.vercel.app" , expires , httpOnly:true, signed: true});
     res.status(200).json({ message: "OK", name:user.name , email:user.email , token });
   } catch (err) {
     console.error(err.message);
@@ -126,7 +126,7 @@ export const userLogout = async (
 
     res.clearCookie(COOKIE_NAME, {
       httpOnly: true,
-      domain:"localhost" ,
+      domain:"https://ai-chat-bot-frontend-phi.vercel.app" ,
       signed: true,
       path: "/"
     });
