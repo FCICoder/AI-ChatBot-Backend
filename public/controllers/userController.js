@@ -26,17 +26,27 @@ export const signupUser = async (req, res, next) => {
             return res.status(400).json({ message: "User already exists" });
         user = new userModel({ name, email, password: hashedPassword });
         await user.save();
-        // create token and store cookie 
+        // Create token and store cookie 
         res.clearCookie(COOKIE_NAME, {
             httpOnly: true,
-            domain: "https://ai-chat-bot-frontend-phi.vercel.app",
+            domain: "ai-chat-bot-frontend-phi.vercel.app",
             signed: true,
-            path: "/"
+            path: "/",
+            // sameSite: "None", // Allow cross-site cookie
+            secure: process.env.NODE_ENV === "production" // Use secure cookies in production
         });
         const token = createToken(user._id.toString(), user.email, "7d");
         const expires = new Date();
         expires.setDate(expires.getDate() + 7);
-        res.cookie(COOKIE_NAME, token, { path: "/", domain: "https://ai-chat-bot-frontend-phi.vercel.app", expires, httpOnly: true, signed: true });
+        res.cookie(COOKIE_NAME, token, {
+            path: "/",
+            domain: "ai-chat-bot-frontend-phi.vercel.app",
+            expires,
+            httpOnly: true,
+            signed: true,
+            // sameSite: "None",
+            secure: process.env.NODE_ENV === "production"
+        });
         res.status(201).json({ message: "OK", name: user.name, email: user.email, token });
     }
     catch (err) {
@@ -53,17 +63,27 @@ export const loginUser = async (req, res, next) => {
             return res.status(400).json({ message: "User not found" });
         const isMatch = await compare(password, user.password);
         if (!isMatch)
-            return res.status(403).json({ message: "Incorrect Password.. " });
+            return res.status(403).json({ message: "Incorrect Password.." });
         res.clearCookie(COOKIE_NAME, {
             httpOnly: true,
-            domain: "https://ai-chat-bot-frontend-phi.vercel.app/",
+            domain: "ai-chat-bot-frontend-phi.vercel.app",
             signed: true,
-            path: "/"
+            path: "/",
+            // sameSite: "None",
+            secure: process.env.NODE_ENV === "production"
         });
         const token = createToken(user._id.toString(), user.email, "7d");
         const expires = new Date();
         expires.setDate(expires.getDate() + 7);
-        res.cookie(COOKIE_NAME, token, { path: "/", domain: "https://ai-chat-bot-frontend-phi.vercel.app", expires, httpOnly: true, signed: true });
+        res.cookie(COOKIE_NAME, token, {
+            path: "/",
+            domain: "ai-chat-bot-frontend-phi.vercel.app",
+            expires,
+            httpOnly: true,
+            signed: true,
+            // sameSite: "None",
+            secure: process.env.NODE_ENV === "production"
+        });
         res.status(200).json({ message: "OK", name: user.name, email: user.email, token });
     }
     catch (err) {
@@ -77,9 +97,9 @@ export const verifyUser = async (req, res, next) => {
         if (!user)
             return res.status(400).json({ message: "Token malfunctioned" });
         if (user._id.toString() !== res.locals.jwtData.id) {
-            res.status(401).json({ message: " Permisson did not match" });
+            res.status(401).json({ message: "Permission did not match" });
         }
-        res.status(200).json({ message: "OK", name: user.name, password: user.email });
+        res.status(200).json({ message: "OK", name: user.name, email: user.email });
     }
     catch (err) {
         console.error(err.message);
@@ -92,15 +112,17 @@ export const userLogout = async (req, res, next) => {
         if (!user)
             return res.status(400).json({ message: "Token malfunctioned" });
         if (user._id.toString() !== res.locals.jwtData.id) {
-            res.status(401).json({ message: " Permisson did not match" });
+            res.status(401).json({ message: "Permission did not match" });
         }
         res.clearCookie(COOKIE_NAME, {
             httpOnly: true,
-            domain: "https://ai-chat-bot-frontend-phi.vercel.app",
+            domain: "ai-chat-bot-frontend-phi.vercel.app",
             signed: true,
-            path: "/"
+            path: "/",
+            // sameSite: ,
+            secure: process.env.NODE_ENV === "production"
         });
-        res.status(200).json({ message: "OK", name: user.name, password: user.email });
+        res.status(200).json({ message: "OK", name: user.name, email: user.email });
     }
     catch (err) {
         console.error(err.message);
