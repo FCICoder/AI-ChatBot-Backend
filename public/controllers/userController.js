@@ -33,7 +33,6 @@ export const signupUser = async (req, res, next) => {
             signed: true,
             path: "/",
             sameSite: "none", // Allow cross-site cookie
-            secure: process.env.NODE_ENV === "production" // Use secure cookies in production
         });
         const token = createToken(user._id.toString(), user.email, "7d");
         const expires = new Date();
@@ -45,7 +44,6 @@ export const signupUser = async (req, res, next) => {
             httpOnly: true,
             signed: true,
             sameSite: "none",
-            secure: process.env.NODE_ENV === "production"
         });
         res.status(201).json({ message: "OK", name: user.name, email: user.email, token });
     }
@@ -70,7 +68,6 @@ export const loginUser = async (req, res, next) => {
             signed: true,
             path: "/",
             sameSite: "none",
-            secure: process.env.NODE_ENV === "production"
         });
         const token = createToken(user._id.toString(), user.email, "7d");
         const expires = new Date();
@@ -82,7 +79,6 @@ export const loginUser = async (req, res, next) => {
             httpOnly: true,
             signed: true,
             sameSite: "none",
-            secure: process.env.NODE_ENV === "production"
         });
         res.status(200).json({ message: "OK", name: user.name, email: user.email, token });
     }
@@ -120,7 +116,6 @@ export const userLogout = async (req, res, next) => {
             signed: true,
             path: "/",
             sameSite: "none",
-            secure: process.env.NODE_ENV === "production"
         });
         res.status(200).json({ message: "OK", name: user.name, email: user.email });
     }
